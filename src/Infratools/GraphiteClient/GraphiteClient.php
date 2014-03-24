@@ -66,7 +66,7 @@ class GraphiteClient
         $this->socket = fsockopen("udp://$host", $port);
         $this->log = $log;
 
-        register_shutdown_function(array($this), 'close');
+        register_shutdown_function(array(&$this), 'close');
     }
 
     /**
