@@ -65,8 +65,6 @@ class GraphiteClient
         $this->prefix = $prefix;
         $this->socket = fsockopen("udp://$host", $port);
         $this->log = $log;
-
-        register_shutdown_function(array(&$this), 'close');
     }
 
     /**
@@ -93,10 +91,5 @@ class GraphiteClient
         }
 
         fwrite($this->socket, $msg);
-    }
-
-    public function close()
-    {
-        fclose($this->socket);
     }
 }
