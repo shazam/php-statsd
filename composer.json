@@ -1,0 +1,14 @@
+{
+    "name": "infratools/graphiteClient",
+    "description": "Sends metrics to Graphite.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Toni Lopez",
+            "email": "toni.lopez@shazam.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Infratools\\": "src"}
+    }
+}
