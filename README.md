@@ -63,10 +63,10 @@ $app->run();
 ```
 
 The constructor of the GraphiteClient object needs:
-1. A host to push metrics (use 127.0.0.1 if you have netpipes installed in your box).
-2. A port (8126).
-3. A prefix (where all your metrics will be added. Use "." to separate folders.
-4. Optionally, a Monolog\Logger object, to log the metrics.
+1 A host to push metrics (use 127.0.0.1 if you have netpipes installed in your box).
+2 A port (8126).
+3 A prefix (where all your metrics will be added. Use "." to separate folders.
+4 Optionally, a Monolog\Logger object, to log the metrics.
 
 An examlpe of a config file for that client could be:
 
