@@ -1,3 +1,24 @@
+Graphite PHP Client
+###################
+A simple PHP library that allows you to send metrics to Graphite.
+
+Installation
+------------
+Add the dependency to your composer.json.
+```json
+{
+    "repositories": [
+        {
+            "url": "git@gitlab.uk.shazamteam.net:infratools/graphite-client.git",
+            "type": "git"
+        }
+    ],
+    "require": {
+        "infratools/graphiteClient": "*"
+    }
+}
+```
+
 Usage
 -----
 An example of how to send metrics of how long it takes to load a page.
