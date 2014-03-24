@@ -1,8 +1,10 @@
 Usage
 -----
 An example of how to send metrics of how long it takes to load a page.
+
 ```php
 <?php
+
 $start = microtime(true);
 
 $app = new Silex\Application();
@@ -36,4 +38,5 @@ $app->after(
 );
 
 $app->run();
+
 ```
