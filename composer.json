@@ -1,5 +1,5 @@
 {
-    "name": "infratools/graphiteClient",
+    "name": "infratools/graphite-client",
     "description": "Sends metrics to Graphite.",
     "type": "library",
     "authors": [
