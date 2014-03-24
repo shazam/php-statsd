@@ -4,6 +4,7 @@ A simple PHP library that allows you to send metrics to Graphite.
 Installation
 ------------
 Add the dependency to your composer.json.
+
 ```javascript
 {
     "repositories": [
