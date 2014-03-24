@@ -1,11 +1,10 @@
-Graphite PHP Client
-###################
+# Graphite PHP Client
 A simple PHP library that allows you to send metrics to Graphite.
 
 Installation
 ------------
 Add the dependency to your composer.json.
-```json
+```javascript
 {
     "repositories": [
         {
