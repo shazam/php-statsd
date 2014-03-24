@@ -3,9 +3,7 @@ Usage
 An example of how to send metrics of how long it takes to load a page.
 ```php
 $start = microtime(true);
-
 $app = new Silex\Application();
-
 // initialize client
 $app['Utils\GraphiteClient'] = $app->share(function ($app) {
     if (!$app['config']['environment']['metrics']) {
@@ -20,7 +18,6 @@ $app['Utils\GraphiteClient'] = $app->share(function ($app) {
         $app['monolog']
     );
 });
-
 // send metrics
 $app->after(
     function(Request $request) use ($app, $start) {
@@ -33,6 +30,5 @@ $app->after(
         }
     }
 );
-
 $app->run();
 ```
