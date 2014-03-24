@@ -6,9 +6,7 @@ $start = microtime(true);
 
 $app = new Silex\Application();
 
-...
-
-# initialize client
+// initialize client
 $app['Utils\GraphiteClient'] = $app->share(function ($app) {
     if (!$app['config']['environment']['metrics']) {
         return null;
@@ -23,9 +21,7 @@ $app['Utils\GraphiteClient'] = $app->share(function ($app) {
     );
 });
 
-...
-
-# send metrics
+// send metrics
 $app->after(
     function(Request $request) use ($app, $start) {
         $lastTweet = $app['Redis\TweetLoader']->getTweets(1, $app['Redis\TweetLoader']->getLastPost());
