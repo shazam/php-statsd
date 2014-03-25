@@ -1,6 +1,6 @@
 {
-    "name": "infratools/graphite-client",
-    "description": "Sends metrics to Graphite.",
+    "name": "infratools/php-statsd",
+    "description": "Sends stats to Statsd.",
     "keywords": ["statsd"],
     "type": "library",
     "authors": [
