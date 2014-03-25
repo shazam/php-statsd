@@ -1,6 +1,7 @@
 {
     "name": "infratools/graphite-client",
     "description": "Sends metrics to Graphite.",
+    "keywords": ["statsd"],
     "type": "library",
     "authors": [
         {
@@ -9,6 +10,6 @@
         }
     ],
     "autoload": {
-        "psr-0": {"Infratools\\GraphiteClient\\": "src"}
+        "psr-0": {"Statsd": "src/"}
     }
 }

@@ -1,21 +1,21 @@
 <?php
 
 /**
- * @package Infratools\GraphiteClient
+ * @package Statsd
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace Infratools\GraphiteClient;
+namespace Statsd;
 
 use \Monolog\Logger;
 
 /**
- * Client to write metrics into Graphite.
+ * Library to send stats to statsd.
  *
- * @package Infratools\GraphiteClient
+ * @package Statsd
  */
 
-class GraphiteClient
+class Statsd
 {
     /**
      * @const string
@@ -35,18 +35,18 @@ class GraphiteClient
     /**
      * @var Logger|null
      */
-    private $log;
+    private $logger;
 
     /**
      * @param string $host
      * @param string $port
      * @param string $prefix
-     * @param Logger|null $log
+     * @param Logger|null $logger
      * @throws \Exception The port has to be an integer
      * @throws \Exception The host has to be a valid URL or IP
      * @throws \Exception The prefix is not valid
      */
-    public function __construct($host, $port, $prefix, $log = null)
+    public function __construct($host, $port, $prefix, $logger = null)
     {
         if (!is_int($port)) {
             throw new \Exception("'$port' has to be an integer.");
@@ -64,7 +64,7 @@ class GraphiteClient
 
         $this->prefix = $prefix;
         $this->socket = fsockopen("udp://$host", $port);
-        $this->log = $log;
+        $this->logger = $logger;
     }
 
     /**
@@ -86,8 +86,8 @@ class GraphiteClient
 
         $msg = "{$this->prefix}.$namespace:$value|ms";
 
-        if (null !== $this->log) {
-            $this->log->info('Sending metrics: ' . $msg);
+        if (null !== $this->logger) {
+            $this->logger->info('Sending metrics: ' . $msg);
         }
 
         fwrite($this->socket, $msg);

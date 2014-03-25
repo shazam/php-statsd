@@ -1,21 +1,22 @@
 <?php
 
 /**
- * @package Tests\Infratools\TwitterHose\Test\Integration\Cases
- * @subpackage Utils
+ * @package Statsd
+ * @subpackage Tests
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace Tests\Infratools\TwitterHose\Integration\Cases\Utils;
+namespace Statsd\Tests;
 
-use Infratools\TwitterHose\Utils\GraphiteClient;
+use Statsd\Statsd;
 
 /**
- * @package Tests\Infratools\TwitterHose\Test\Integration\Cases
+ * @package Statsd
+ * @subpackage Tests
  * @subpackage Utils
  */
 
-class GraphiteClientTest extends \PHPUnit_Framework_TestCase
+class StatsdTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Monolog\Logger
@@ -70,7 +71,7 @@ class GraphiteClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanConstructException($host, $port, $prefix)
     {
-        new GraphiteClient($host, $port, $prefix, $this->log);
+        new Statsd($host, $port, $prefix, $this->log);
     }
 
     /**
@@ -109,7 +110,7 @@ class GraphiteClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanConstruct($host, $port, $prefix)
     {
-        new GraphiteClient($host, $port, $prefix, $this->log);
+        new Statsd($host, $port, $prefix, $this->log);
     }
 
     /**
@@ -150,7 +151,7 @@ class GraphiteClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddTripleException($namespace, $timestamp)
     {
-        $graphiteClient = new GraphiteClient('this.is.a.host', 12, 'stats.twitterhose', $this->log);
+        $graphiteClient = new Statsd('this.is.a.host', 12, 'stats.twitterhose', $this->log);
 
         $graphiteClient->addTriple($namespace, $timestamp);
     }
