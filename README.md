@@ -14,7 +14,7 @@ Add the dependency to your composer.json.
         }
     ],
     "require": {
-        "infratools/graphiteClient": "*"
+        "infratools/graphite-client": "1.*"
     }
 }
 ```
