@@ -12,7 +12,7 @@ fi
 
 git checkout master
 git pull origin master
-git tag -a "$1"
+git tag -a "$1" -m "Version $1"
 git push --tags
 
 echo ""
