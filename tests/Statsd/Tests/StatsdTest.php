@@ -9,11 +9,11 @@
 namespace Statsd\Tests;
 
 use Statsd\Statsd;
+use Statsd\StatsdClient\Configuration;
 
 /**
  * @package Statsd
  * @subpackage Tests
- * @subpackage Utils
  */
 
 class StatsdTest extends \PHPUnit_Framework_TestCase
@@ -21,107 +21,24 @@ class StatsdTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \Monolog\Logger
      */
-    private $log;
+    private $logger;
+
+    /**
+     * @var Configuration
+     */
+    private $configuration;
 
     public function setUp()
     {
-        $this->log = $this->getMock('\Monolog\Logger');
+        $this->logger = $this->getMock('\Monolog\Logger');
+
+        $this->configuration = new Configuration();
     }
 
     /**
-     * Cases:
-     * - Hostname is not a string
-     * - Hostname is not a valid URL
-     * - Port has to be an integer
-     * - Invalid prefix
      * @return array
      */
-    public function providerCanConstructException()
-    {
-        return array(
-            array(
-                'host' => 12,
-                'port' => 100,
-                'prefix' => 'stats.twitterhose'
-            ),
-            array(
-                'host' => 'that is not an url',
-                'port' => 100,
-                'prefix' => 'stats.twitterhose'
-            ),
-            array(
-                'host' => 'valid.hostname.net',
-                'port' => '3',
-                'prefix' => 'stats.twitterhose'
-            ),
-            array(
-                'host' => 'valid.hostname.net',
-                'port' => 2,
-                'prefix' => 'stats.twitter-hose'
-            )
-        );
-    }
-
-    /**
-     * @param mixed $host
-     * @param mixed $port
-     * @param mixed $prefix
-     * @dataProvider providerCanConstructException
-     * @expectedException \Exception
-     */
-    public function testCanConstructException($host, $port, $prefix)
-    {
-        new Statsd($host, $port, $prefix, $this->log);
-    }
-
-    /**
-     * Cases:
-     * - Hostname
-     * - IP
-     * - No subsections
-     * @return array
-     */
-    public function providerCanConstruct()
-    {
-        return array(
-            array(
-                'host' => 'google.com',
-                'port' => 100,
-                'prefix' => 'stats.twitterhose'
-            ),
-            array(
-                'host' => '192.168.1.1',
-                'port' => 100,
-                'prefix' => 'stats.twitterhose'
-            ),
-            array(
-                'host' => '192.168.1.1',
-                'port' => 100,
-                'prefix' => 'stats'
-            )
-        );
-    }
-
-    /**
-     * @param mixed $host
-     * @param mixed $port
-     * @param mixed $prefix
-     * @dataProvider providerCanConstruct
-     */
-    public function testCanConstruct($host, $port, $prefix)
-    {
-        new Statsd($host, $port, $prefix, $this->log);
-    }
-
-    /**
-     * Cases:
-     * - namespace is not a string
-     * - namespace is not valid
-     * - timestamp not a number
-     * - timestamp is null
-     * @return array
-     */
-    public function providerAddTripleException()
+    public function providerSentStatException()
     {
         return array(
             array(
@@ -144,15 +61,15 @@ class StatsdTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providerAddTripleException
+     * @dataProvider providerSentStatException
      * @expectedException \Exception
      * @param string $namespace
      * @param mixed $timestamp
      */
-    public function testAddTripleException($namespace, $timestamp)
+    public function testSendStatException($namespace, $timestamp)
     {
-        $graphiteClient = new Statsd('this.is.a.host', 12, 'stats.twitterhose', $this->log);
+        $statsd = new Statsd($this->configuration, $this->logger);
 
-        $graphiteClient->sendStat($namespace, $timestamp);
+        $statsd->sendStat($namespace, $timestamp);
     }
 }

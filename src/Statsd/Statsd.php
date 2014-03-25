@@ -7,7 +7,8 @@
 
 namespace Statsd;
 
-use \Monolog\Logger;
+use Monolog\Logger;
+use Statsd\StatsdClient\Configuration;
 
 /**
  * Library to send stats to statsd.
@@ -20,12 +21,12 @@ class Statsd
     /**
      * @const string
      */
-    const VALID_NAMESPACE_PATTERN = '/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/';
+    public static $VALID_NAMESPACE_PATTERN = '/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/';
 
     /**
      * @var string
      */
-    private $prefix;
+    private $namespace;
 
     /**
      * @var Resource
@@ -38,32 +39,16 @@ class Statsd
     private $logger;
 
     /**
-     * @param string $host
-     * @param string $port
-     * @param string $prefix
+     * @param Configuration $configuration
      * @param Logger|null $logger
-     * @throws \Exception The port has to be an integer
-     * @throws \Exception The host has to be a valid URL or IP
-     * @throws \Exception The prefix is not valid
      */
-    public function __construct($host, $port, $prefix, $logger = null)
+    public function __construct(Configuration $configuration, $logger = null)
     {
-        if (!is_int($port)) {
-            throw new \Exception("'$port' has to be an integer.");
-        } elseif (!is_string($host)
-            || filter_var("http://$host", FILTER_VALIDATE_URL) === false
-            && filter_var($host, FILTER_VALIDATE_IP) === false
-        ) {
-            throw new \Exception("'$host' does not seem to be a valid host or IP.");
-        } elseif (!preg_match('/^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/', $prefix)) {
-            throw new \Exception(
-                "'$prefix' does not seem to be a valid prefix. Use a string of "
-                    . 'alphanumerics and dots, e.g. "stats.infratools.twitterhose".'
-            );
-        }
+        $this->namespace = $configuration->getNamespace();
 
-        $this->prefix = $prefix;
-        $this->socket = fsockopen("udp://$host", $port);
+        $socketUrl = sprintf('udp://', $configuration->getHost());
+        $this->socket = fsockopen($socketUrl, $configuration->getPort());
+
         $this->logger = $logger;
     }
 
@@ -75,21 +60,32 @@ class Statsd
      */
     public function sendStat($namespace, $value = 1)
     {
-        if (!preg_match(self::VALID_NAMESPACE_PATTERN, $namespace)) {
-            throw new \Exception(
-                "'$namespace' does not seem to be a valid prefix. Use a string of "
-                    . 'alphanumerics and dots, e.g. "stats.infratools.twitterhose".'
-            );
-        } elseif (!is_numeric($value)) {
-            throw new \Exception("Value has to be numeric. Got '$value'.");
-        }
+        $this->sanityCheck($namespace, $value);
 
-        $msg = "{$this->prefix}.$namespace:$value|ms";
+        $msg = "{$this->namespace}.$namespace:$value|ms";
 
         if (null !== $this->logger) {
             $this->logger->info('Sending metrics: ' . $msg);
         }
 
         fwrite($this->socket, $msg);
+    }
+
+    /**
+     * @param string $namespace
+     * @param null|int|double $value
+     * @throws Exception Namespace is not valid
+     * @throws Exception Value has to be numeric
+     */
+    private function sanityCheck($namespace, $value)
+    {
+        if (!preg_match(self::$VALID_NAMESPACE_PATTERN, $namespace)) {
+            throw new Exception(
+                "'$namespace' does not seem to be a valid prefix. Use a string of "
+                . 'alphanumerics and dots, e.g. "stats.infratools.twitterhose".'
+            );
+        } elseif (!is_numeric($value)) {
+            throw new Exception("Value has to be numeric. Got '$value'.");
+        }
     }
 }
