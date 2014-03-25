@@ -46,7 +46,7 @@ class Statsd
     {
         $this->namespace = $configuration->getNamespace();
 
-        $socketUrl = sprintf('udp://', $configuration->getHost());
+        $socketUrl = sprintf('udp://' . $configuration->getHost());
         $this->socket = fsockopen($socketUrl, $configuration->getPort());
 
         $this->logger = $logger;
