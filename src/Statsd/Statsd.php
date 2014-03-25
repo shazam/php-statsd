@@ -73,7 +73,7 @@ class Statsd
      * @throws \Exception Namespace is not valid
      * @throws \Exception Value has to be numeric
      */
-    public function addTriple($namespace, $value = 1)
+    public function sendStat($namespace, $value = 1)
     {
         if (!preg_match(self::VALID_NAMESPACE_PATTERN, $namespace)) {
             throw new \Exception(

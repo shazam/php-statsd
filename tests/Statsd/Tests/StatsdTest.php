@@ -153,6 +153,6 @@ class StatsdTest extends \PHPUnit_Framework_TestCase
     {
         $graphiteClient = new Statsd('this.is.a.host', 12, 'stats.twitterhose', $this->log);
 
-        $graphiteClient->addTriple($namespace, $timestamp);
+        $graphiteClient->sendStat($namespace, $timestamp);
     }
 }
