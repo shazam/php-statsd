@@ -31,26 +31,23 @@ $start = microtime(true);
 $app = new Silex\Application();
 
 // initialize client
-$app['php-statsd'] = $app->share(function ($app) {
-    if (!$app['config']['environment']['metrics']) {
-        return null;
-    }
-
-    $statdsConfig = $app['config']['properties']['statsd'];
-    return new Statsd(
-        $statdsConfig['host'],
-        (int) $statdsConfig['port'],
-        $statdsConfig['prefix'],
-        $app['monolog']
-    );
+$app['Statsd\Statsd'] = $app->share(function ($app) {
+    $configuration = new Configuration();
+    $configuration->setHost($app['config']['environment']['stats']['client']['host'])
+        ->setNamespace($app['config']['environment']['stats']['client']['namespace']);
+    return new Statsd($configuration, $app['monolog']);
 });
 
 // send stats
 $app->after(
     function(Request $request) use ($app, $start) {
-        if (null !== $app['statds']) {
+        if ($app['config']['environment']['stats']['enable']) {
             $path = str_replace('/', '_', substr($request->getPathInfo(), 1));
-            $app['statsd']->sendStat('endpoints.' . $path, microtime(true) - $start);
+            $path = substr($path, strlen($app['config']['environment']['root-point']));
+            $path  = empty($path) ? '_' : $path;
+            if (isset($app['config']['properties']['stats']['paths'][$path])) {
+                $app['Statsd\Statsd']->sendStat('endpoints.' . $path, microtime(true) - $start);
+            }
         }
     }
 );
@@ -63,15 +60,16 @@ Configuration
 -------------
 The constructor of the Statdd object needs:
  * A host to push metrics (use 127.0.0.1 if you have netpipes installed in your box).
- * A port (8126).
- * A prefix (where all your metrics will be added. Use "." to separate folders.
+ * A port (by default, 8126).
+ * A namespace (where all your metrics will be added. Use "." to separate folders.
  * Optionally, a Monolog\Logger object, to log the metrics.
 
 An examlpe of a config file for that client could be:
 
 ```yaml
-statsd:
-  host: 127.0.0.1
-  port: 8126
-  prefix: infratools.twitterhose
+stats:
+  enable: true
+  client:
+    host: 127.0.0.1
+    namespace: infratools.twitterhose
 ```
