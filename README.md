@@ -38,14 +38,17 @@ $configuration->setHost($config['host'])
 
 $statsClient = new Statsd\Client($configuration);
 
-// send stats
-$statsClient->sendStat(
+// add stats (you can also add an array of stats with addStats())
+$statsClient->addStat(
     new Statsd\Domain\Stat(
         'endpoints.' . $path, // that will be your stat namespace
         $executionTime, // calculate it in microseconds
         Statsd\Domain\Stat::TIME_MS
     )
 );
+
+// send them
+$statsClient->sendStats();
 
 ```
 

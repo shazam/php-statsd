@@ -159,4 +159,14 @@ class StatTest extends \PHPUnit_Framework_TestCase
             'Unexpected default type from stat.'
         );
     }
+
+    public function testToString()
+    {
+        $stat = new Stat('name.space', 23.4, Stat::TIME_MS);
+        $this->assertSame(
+            (string) $stat,
+            'name.space:23.4|ms',
+            'Unexpected string cast of the stat.'
+        );
+    }
 }

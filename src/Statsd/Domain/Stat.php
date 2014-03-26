@@ -114,4 +114,12 @@ class Stat
     {
         return $this->value;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s:%s|%s', $this->namespace, $this->value, $this->type);
+    }
 }
