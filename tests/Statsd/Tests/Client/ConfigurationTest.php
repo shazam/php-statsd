@@ -2,17 +2,17 @@
 
 /**
  * @package Statsd\Tests
- * @subpackage StatsdClient
+ * @subpackage Client
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace Statsd\Tests\StatsdClient;
+namespace Statsd\Tests\Client;
 
-use Statsd\StatsdClient\Configuration;
+use Statsd\Client\Configuration;
 
 /**
  * @package Statsd\Tests
- * @subpackage StatsdClient
+ * @subpackage Client
  */
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase

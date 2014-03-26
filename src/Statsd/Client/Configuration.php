@@ -2,11 +2,11 @@
 
 /**
  * @package Statsd
- * @subpackage StatsdClient
+ * @subpackage Client
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace Statsd\StatsdClient;
+namespace Statsd\Client;
 
 use Exception;
 
@@ -14,7 +14,7 @@ use Exception;
  * Represents a configuration for a Statsd client.
  *
  * @package Statsd
- * @subpackage StatsdClient
+ * @subpackage Client
  */
 
 class Configuration

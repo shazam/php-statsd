@@ -8,7 +8,7 @@
 namespace Statsd;
 
 use Monolog\Logger;
-use Statsd\StatsdClient\Configuration;
+use Statsd\Client\Configuration;
 use Statsd\Domain\Stat;
 
 /**
