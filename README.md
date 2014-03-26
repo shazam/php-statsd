@@ -26,35 +26,26 @@ An example of how to send metrics of how long it takes to load a page.
 ```php
 <?php
 
-$start = microtime(true);
+use Statsd;
 
-$app = new Silex\Application();
+// $config = array(...);
+// $path = ...
 
 // initialize client
-$app['Statsd\Client'] = $app->share(function ($app) {
-    $configuration = new Configuration();
-    $configuration->setHost($app['config']['environment']['stats']['client']['host'])
-        ->setNamespace($app['config']['environment']['stats']['client']['namespace']);
-    return new Statsd\Client($configuration, $app['monolog']);
-});
+$configuration = new Statsd\Client\Configuration();
+$configuration->setHost($config['host'])
+    ->setNamespace($config['namespace']);
+
+$statsClient = new Statsd\Client($configuration);
 
 // send stats
-$app->after(
-    function(Request $request) use ($app, $start) {
-        if ($app['config']['environment']['stats']['enable']) {
-            $path = str_replace('/', '_', substr($request->getPathInfo(), 1));
-            $path = substr($path, strlen($app['config']['environment']['root-point']));
-            $path  = empty($path) ? '_' : $path;
-            if (isset($app['config']['properties']['stats']['paths'][$path])) {
-                $app['Statsd\Client']->sendStat(
-                    new Stat('endpoints.' . $path, microtime(true) - $start, Stat:TIME_MS)
-                );
-            }
-        }
-    }
+$statsClient->sendStat(
+    new Statsd\Domain\Stat(
+        'endpoints.' . $path, // that will be your stat namespace
+        $executionTime, // calculate it in microseconds
+        Statsd\Domain\Stat::TIME_MS
+    )
 );
-
-$app->run();
 
 ```
 
