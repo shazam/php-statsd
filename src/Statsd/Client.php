@@ -17,7 +17,7 @@ use Statsd\Domain\Stat;
  * @package Statsd
  */
 
-class Statsd
+class Client
 {
     /**
      * @var string

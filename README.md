@@ -31,11 +31,11 @@ $start = microtime(true);
 $app = new Silex\Application();
 
 // initialize client
-$app['Statsd\Statsd'] = $app->share(function ($app) {
+$app['Statsd\Client'] = $app->share(function ($app) {
     $configuration = new Configuration();
     $configuration->setHost($app['config']['environment']['stats']['client']['host'])
         ->setNamespace($app['config']['environment']['stats']['client']['namespace']);
-    return new Statsd($configuration, $app['monolog']);
+    return new Statsd\Client($configuration, $app['monolog']);
 });
 
 // send stats
@@ -46,7 +46,7 @@ $app->after(
             $path = substr($path, strlen($app['config']['environment']['root-point']));
             $path  = empty($path) ? '_' : $path;
             if (isset($app['config']['properties']['stats']['paths'][$path])) {
-                $app['Statsd\Statsd']->sendStat(
+                $app['Statsd\Client']->sendStat(
                     new Stat('endpoints.' . $path, microtime(true) - $start, Stat:TIME_MS)
                 );
             }
@@ -62,13 +62,12 @@ You can use TIME_MS, COUNT, GAUGE or SET (ms, c, g, s) as type of stats.
 
 Configuration
 -------------
-The constructor of the Statdd object needs:
  * A host to push metrics (use 127.0.0.1 if you have netpipes installed in your box).
  * A port (by default, 8126).
  * A namespace (where all your metrics will be added. Use "." to separate folders.
  * Optionally, a Monolog\Logger object, to log the metrics.
 
-An examlpe of a config file for that client could be:
+An example of a config file for that client could be:
 
 ```yaml
 stats:
