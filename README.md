@@ -46,7 +46,9 @@ $app->after(
             $path = substr($path, strlen($app['config']['environment']['root-point']));
             $path  = empty($path) ? '_' : $path;
             if (isset($app['config']['properties']['stats']['paths'][$path])) {
-                $app['Statsd\Statsd']->sendStat('endpoints.' . $path, microtime(true) - $start);
+                $app['Statsd\Statsd']->sendStat(
+                    new Stat('endpoints.' . $path, microtime(true) - $start, Stat:TIME_MS)
+                );
             }
         }
     }
@@ -55,6 +57,8 @@ $app->after(
 $app->run();
 
 ```
+
+You can use TIME_MS, COUNT, GAUGE or SET (ms, c, g, s) as type of stats.
 
 Configuration
 -------------

@@ -9,6 +9,7 @@ namespace Statsd;
 
 use Monolog\Logger;
 use Statsd\StatsdClient\Configuration;
+use Statsd\Domain\Stat;
 
 /**
  * Library to send stats to statsd.
@@ -18,11 +19,6 @@ use Statsd\StatsdClient\Configuration;
 
 class Statsd
 {
-    /**
-     * @const string
-     */
-    public static $VALID_NAMESPACE_PATTERN = '/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/';
-
     /**
      * @var string
      */
@@ -53,39 +49,21 @@ class Statsd
     }
 
     /**
-     * @param string $namespace
-     * @param null|int|double $value
-     * @throws \Exception Namespace is not valid
-     * @throws \Exception Value has to be numeric
+     * @param Stat $stat
      */
-    public function sendStat($namespace, $value = 1)
+    public function sendStat(Stat $stat)
     {
-        $this->sanityCheck($namespace, $value);
-
-        $msg = "{$this->namespace}.$namespace:$value|ms";
+        $msg = sprintf(
+            "%s:%s|%s",
+            $this->namespace . '.' . $stat->getNamespace(),
+            $stat->getValue(),
+            $stat->getType()
+        );
 
         if (null !== $this->logger) {
             $this->logger->info('Sending metrics: ' . $msg);
         }
 
         fwrite($this->socket, $msg);
-    }
-
-    /**
-     * @param string $namespace
-     * @param null|int|double $value
-     * @throws Exception Namespace is not valid
-     * @throws Exception Value has to be numeric
-     */
-    private function sanityCheck($namespace, $value)
-    {
-        if (!preg_match(self::$VALID_NAMESPACE_PATTERN, $namespace)) {
-            throw new Exception(
-                "'$namespace' does not seem to be a valid prefix. Use a string of "
-                . 'alphanumerics and dots, e.g. "stats.infratools.twitterhose".'
-            );
-        } elseif (!is_numeric($value)) {
-            throw new Exception("Value has to be numeric. Got '$value'.");
-        }
     }
 }

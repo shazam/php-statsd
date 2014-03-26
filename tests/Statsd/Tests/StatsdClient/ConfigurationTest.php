@@ -101,7 +101,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration();
 
         $this->assertSame(
-            Configuration::$DEFAULT_PORT,
+            Configuration::DEFAULT_PORT,
             $configuration->getPort(),
             'Unexpected port.'
         );

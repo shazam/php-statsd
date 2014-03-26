@@ -20,9 +20,14 @@ use Exception;
 class Configuration
 {
     /**
-     * @static int
+     * @const int
      */
-    public static $DEFAULT_PORT = 8126;
+    const DEFAULT_PORT = 8126;
+
+    /**
+     * @const string
+     */
+    const VALID_NAMESPACE_PATTERN = '/^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/';
 
     /**
      * @var string
@@ -60,7 +65,7 @@ class Configuration
      */
     public function getPort()
     {
-        return $this->port === null ? self::$DEFAULT_PORT : $this->port;
+        return $this->port === null ? self::DEFAULT_PORT : $this->port;
     }
 
     /**
@@ -106,7 +111,7 @@ class Configuration
     public function setNamespace($namespace)
     {
         if (!is_string($namespace)
-            || !preg_match('/^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/', $namespace)
+            || !preg_match(self::VALID_NAMESPACE_PATTERN, $namespace)
         ) {
             throw new \Exception(
                 "'$namespace' does not seem to be a valid namespace. Use a string of "
