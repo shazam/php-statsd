@@ -52,6 +52,7 @@ $statsClient->sendStats();
 
 ```
 
+
 You can use TIME_MS, COUNT, GAUGE or SET (ms, c, g, s) as type of stats.
 
 Configuration
