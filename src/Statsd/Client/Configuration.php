@@ -22,7 +22,7 @@ class Configuration
     /**
      * @const int
      */
-    const DEFAULT_PORT = 8126;
+    const DEFAULT_PORT = 8125;
 
     /**
      * @const string
