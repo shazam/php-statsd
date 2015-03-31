@@ -1,6 +1,7 @@
 {
     "name": "infratools/php-statsd",
     "description": "Sends stats to Statsd.",
+    "license": "Apache-2.0",
     "keywords": ["statsd"],
     "type": "library",
     "authors": [
