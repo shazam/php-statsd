@@ -8,7 +8,7 @@ Add the dependency to your composer.json.
 ```javascript
 {
     "require": {
-        "infratools/php-statsd": "1.*"
+        "infratools/php-statsd": "2.*"
     }
 }
 ```
@@ -34,10 +34,10 @@ $statsClient = new Statsd\Client($configuration);
 
 // add stats (you can also add an array of stats with addStats())
 $statsClient->addStat(
-    new Statsd\Domain\Stat(
-        'endpoints.' . $path, // that will be your stat namespace
-        $executionTime, // calculate it in microseconds
-        Statsd\Domain\Stat::TIME_MS
+    array(
+        'namespace' => 'endpoints.' . $path, // that will be your stat namespace
+        'value' => $executionTime, // calculate it in microseconds
+        'type' => Statsd\Domain\Stat::TIME_MS
     )
 );
 
