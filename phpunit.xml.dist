@@ -9,11 +9,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="vendor/autoload.php"
         >
     <testsuites>
         <testsuite name="Statsd Test Suite">
-            <directory>./tests/Statsd/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
     <filter>

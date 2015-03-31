@@ -7,6 +7,7 @@
 
 namespace Statsd;
 
+use Exception;
 use Monolog\Logger;
 use Statsd\Client\Configuration;
 
@@ -55,7 +56,7 @@ class Client
     {
         try {
             $this->isValidStat($stat);
-        } catch (Exception) {
+        } catch (Exception $e) {
             throw new Exception('Stat is not valid: ' . $e->getMessage());
         }
 
@@ -98,7 +99,9 @@ class Client
      */
     private function isValidStat(array $stat)
     {
-        if (!preg_match('/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/', $stat['namespace'])) {
+        if (!isset($stat['namespace']) || !isset($stat['value']) || !isset($stat['type'])) {
+            throw new Exception('namespace, type and value are mandatory keys.');
+        } elseif (!preg_match('/^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/', $stat['namespace'])) {
             throw new Exception(
                 "'$stat[namespace]' does not seem to be a valid prefix. Use a string of "
                 . 'alphanumerics and dots, e.g. "stats.infratools.twitterhose".'
@@ -114,7 +117,7 @@ class Client
      * @param array $stat
      * @return string
      */
-    private function statToString()
+    private function statToString($stat)
     {
         return sprintf('%s:%s|%s', $stat['namespace'], $stat['value'], $stat['type']);
     }
