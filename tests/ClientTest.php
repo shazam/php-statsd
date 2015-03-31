@@ -37,4 +37,26 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = new Client(new Configuration());
         $client->addStat($stat);
     }
+
+    public function testSend()
+    {
+        $configuration = new Configuration();
+        $configuration->setHost('127.0.0.1')->setNamespace('base.name')->setPort(123456);
+
+        $client = new Client($configuration);
+        $client->addStats(
+            array(
+                array('namespace' => 'some.namespace', 'value' => 12, 'type' => 'ms'),
+                array('namespace' => 'some.namespace2', 'value' => 1, 'type' => 'c')
+            )
+        );
+
+        $messages = $client->sendStats();
+
+        $expected = array(
+            'base.name.some.namespace:12|ms',
+            'base.name.some.namespace2:1|c'
+        );
+        $this->assertSame($messages, $expected);
+    }
 }

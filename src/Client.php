@@ -73,25 +73,31 @@ class Client
         }
     }
 
+    /**
+     * @return $messages
+     */
     public function sendStats()
     {
         $namespace = $this->configuration->getNamespace();
 
         $socketUrl = sprintf('udp://' . $this->configuration->getHost());
-        $socket = fsockopen($socketUrl, $this->configuration->getPort());
 
+        $messages = array();
         foreach ($this->stats as $key => $stat) {
             $msg = $namespace . '.' . $this->statToString($stat);
+            $messages[] = $msg;
 
             if (null !== $this->logger) {
                 $this->logger->info('Sending metrics: ' . $msg);
             }
 
+            $socket = fsockopen($socketUrl, $this->configuration->getPort());
             fwrite($socket, $msg);
+            fclose($socket);
             unset($this->stats[$key]);
         }
 
-        fclose($socket);
+        return $messages;
     }
 
     /**
