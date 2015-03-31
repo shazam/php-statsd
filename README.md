@@ -7,12 +7,6 @@ Add the dependency to your composer.json.
 
 ```javascript
 {
-    "repositories": [
-        {
-            "url": "git@gitlab.uk.shazamteam.net:infra-tools/php-statsd.git",
-            "type": "git"
-        }
-    ],
     "require": {
         "infratools/php-statsd": "1.*"
     }
