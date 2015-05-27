@@ -8,7 +8,7 @@ Add the dependency to your composer.json.
 ```javascript
 {
     "require": {
-        "infratools/php-statsd": "2.*"
+        "shazam/php-statsd": "2.*"
     }
 }
 ```
@@ -37,7 +37,7 @@ $statsClient->addStat(
     array(
         'namespace' => 'endpoints.' . $path, // that will be your stat namespace
         'value' => $executionTime, // calculate it in microseconds
-        'type' => Statsd\Domain\Stat::TIME_MS
+        'type' => 'ms'
     )
 );
 
@@ -62,5 +62,5 @@ stats:
   enable: true
   client:
     host: 127.0.0.1
-    namespace: infratools.twitterhose
+    namespace: shazam.twitterhose
 ```
